@@ -21,7 +21,7 @@ export function parseNaturalLanguageInput(text: string): ParsedEmissionsResponse
   // ── Transit Detection ──────────────────────────────────────────────
   if (/\b(drove|drive|car|uber|taxi|commut)\b/.test(lowerText)) {
     const match = lowerText.match(/(\d+)\s*mile/);
-    const miles = match ? parseInt(match[1], 10) : 15;
+    const miles = match ? parseInt(match[1] ?? "", 10) : 15;
     activities.push({
       type: `Drove ${miles} miles in a gas-powered vehicle`,
       category: "Transit" as ActivityCategory,
@@ -32,7 +32,7 @@ export function parseNaturalLanguageInput(text: string): ParsedEmissionsResponse
 
   if (/\b(fl[ey]w|flight|plane|airport)\b/.test(lowerText)) {
     const match = lowerText.match(/(\d+)\s*(hour|hr)/);
-    const hours = match ? parseInt(match[1], 10) : 2;
+    const hours = match ? parseInt(match[1] ?? "", 10) : 2;
     activities.push({
       type: `Took a ${hours}-hour flight`,
       category: "Transit" as ActivityCategory,
@@ -68,7 +68,7 @@ export function parseNaturalLanguageInput(text: string): ParsedEmissionsResponse
   // ── Energy Detection ───────────────────────────────────────────────
   if (/\b(ac|a\/c|air\s*condition|heater|heating|furnace)\b/.test(lowerText)) {
     const match = lowerText.match(/(\d+)\s*(hour|hr)/);
-    const hours = match ? parseInt(match[1], 10) : 8;
+    const hours = match ? parseInt(match[1] ?? "", 10) : 8;
     activities.push({
       type: `Ran climate control for ${hours} hours`,
       category: "Energy" as ActivityCategory,
@@ -79,7 +79,7 @@ export function parseNaturalLanguageInput(text: string): ParsedEmissionsResponse
 
   if (/\b(light|lamp|bulb|led)\b/.test(lowerText)) {
     const match = lowerText.match(/(\d+)\s*(hour|hr)/);
-    const hours = match ? parseInt(match[1], 10) : 5;
+    const hours = match ? parseInt(match[1] ?? "", 10) : 5;
     activities.push({
       type: `Left lights on for ${hours} hours`,
       category: "Energy" as ActivityCategory,

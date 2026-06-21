@@ -5,7 +5,7 @@ import { ActivityCategory } from "../types";
  * Sources: EPA GHG Equivalencies Calculator, DEFRA Conversion Factors.
  * All values are in kilograms of CO2 equivalent (kg CO2e).
  */
-export const EMISSION_FACTORS: Readonly<Record<string, number>> = {
+export const EMISSION_FACTORS = {
   gas_car_per_mile: 0.4,
   beef_meal: 3.0,
   chicken_meal: 1.5,
