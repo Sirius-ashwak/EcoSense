@@ -1,64 +1,129 @@
 import { ActivityCategory, ParsedEmissionsResponse } from "../types";
+import { EMISSION_FACTORS } from "./emissionsCalculator";
 
 /**
- * Service to process natural language input and extract structured carbon emission activities.
- * Implements a smart, dynamic assistant persona for accurate contextual mapping.
- * 
- * @param {string} text - The natural language input from the user.
- * @returns {ParsedEmissionsResponse} The parsed array of activities with insights.
+ * EcoSense NLP Service — Smart Activity Parser
+ *
+ * Implements a context-aware sustainability assistant persona that:
+ * 1. Detects multiple activities from a single natural-language sentence.
+ * 2. Extracts quantitative values (miles, hours) when present.
+ * 3. Assigns emissions using evidence-based factors from `emissionsCalculator`.
+ * 4. Provides personalized, actionable sustainability recommendations.
+ * 5. Falls back gracefully when input is ambiguous or unrecognized.
+ *
+ * @param text - Raw natural language input from the user.
+ * @returns An array of parsed activities with calculated emissions and tips.
  */
 export function parseNaturalLanguageInput(text: string): ParsedEmissionsResponse {
   const lowerText = text.toLowerCase();
   const activities: ParsedEmissionsResponse = [];
 
-  // Contextual Transit Detection
-  if (lowerText.includes("drove") || lowerText.includes("mile") || lowerText.includes("car")) {
+  // ── Transit Detection ──────────────────────────────────────────────
+  if (/\b(drove|drive|car|uber|taxi|commut)\b/.test(lowerText)) {
     const match = lowerText.match(/(\d+)\s*mile/);
     const miles = match ? parseInt(match[1], 10) : 15;
     activities.push({
       type: `Drove ${miles} miles in a gas-powered vehicle`,
       category: "Transit" as ActivityCategory,
-      carbonKg: miles * 0.4,
-      tip: "Assistant Tip: Consider carpooling, walking, or using public transit next time to cut emissions.",
+      carbonKg: parseFloat((miles * EMISSION_FACTORS.gas_car_per_mile).toFixed(2)),
+      tip: "🚗 Consider carpooling, cycling, or public transit. Even one car-free day per week can cut your transit emissions by ~15%.",
     });
   }
 
-  // Contextual Diet Detection
-  if (lowerText.includes("beef") || lowerText.includes("burger") || lowerText.includes("meat")) {
+  if (/\b(fl[ey]w|flight|plane|airport)\b/.test(lowerText)) {
+    const match = lowerText.match(/(\d+)\s*(hour|hr)/);
+    const hours = match ? parseInt(match[1], 10) : 2;
+    activities.push({
+      type: `Took a ${hours}-hour flight`,
+      category: "Transit" as ActivityCategory,
+      carbonKg: parseFloat((hours * 90).toFixed(2)),
+      tip: "✈️ Flights are the highest per-hour emission source. Consider trains for short distances or carbon offset programs.",
+    });
+  }
+
+  // ── Diet Detection ─────────────────────────────────────────────────
+  if (/\b(beef|steak|burger|red\s*meat|lamb)\b/.test(lowerText)) {
     activities.push({
       type: "Consumed a high-carbon meal (Beef/Red Meat)",
       category: "Diet" as ActivityCategory,
-      carbonKg: 3.0,
-      tip: "Assistant Tip: Try swapping one meat meal a week for a plant-based alternative to significantly lower your footprint.",
+      carbonKg: EMISSION_FACTORS.beef_meal,
+      tip: "🥩 Red meat has the highest carbon footprint of any food. Swapping just one beef meal per week for plant-based saves ~156 kg CO2/year.",
     });
-  } else if (lowerText.includes("chicken") || lowerText.includes("fish")) {
-     activities.push({
+  } else if (/\b(chicken|poultry|fish|seafood|salmon|tuna)\b/.test(lowerText)) {
+    activities.push({
       type: "Consumed a medium-carbon meal (Chicken/Fish)",
       category: "Diet" as ActivityCategory,
-      carbonKg: 1.5,
-      tip: "Assistant Tip: Great choice over beef! Going fully vegetarian occasionally can reduce this even further.",
+      carbonKg: EMISSION_FACTORS.chicken_meal,
+      tip: "🍗 Good choice over beef! Chicken produces ~80% less CO2 than beef per serving.",
+    });
+  } else if (/\b(vegan|vegetarian|salad|plant|tofu|veggie)\b/.test(lowerText)) {
+    activities.push({
+      type: "Consumed a low-carbon meal (Plant-based)",
+      category: "Diet" as ActivityCategory,
+      carbonKg: EMISSION_FACTORS.vegetarian_meal,
+      tip: "🥗 Excellent! Plant-based meals produce up to 90% less emissions than meat-based alternatives.",
     });
   }
 
-  // Contextual Energy Detection
-  if (lowerText.includes("ac") || lowerText.includes("air condition") || lowerText.includes("heater")) {
-    const match = lowerText.match(/(\d+)\s*hour/);
+  // ── Energy Detection ───────────────────────────────────────────────
+  if (/\b(ac|a\/c|air\s*condition|heater|heating|furnace)\b/.test(lowerText)) {
+    const match = lowerText.match(/(\d+)\s*(hour|hr)/);
     const hours = match ? parseInt(match[1], 10) : 8;
     activities.push({
       type: `Ran climate control for ${hours} hours`,
       category: "Energy" as ActivityCategory,
-      carbonKg: hours * 0.5,
-      tip: "Assistant Tip: Adjusting your thermostat by just 2 degrees can save massive amounts of energy over a year.",
+      carbonKg: parseFloat((hours * EMISSION_FACTORS.ac_per_hour).toFixed(2)),
+      tip: "🌡️ Adjusting your thermostat by 2°F can save up to 3% on your heating/cooling bill and emissions.",
     });
   }
 
-  // Dynamic Context Fallback Strategy
+  if (/\b(light|lamp|bulb|led)\b/.test(lowerText)) {
+    const match = lowerText.match(/(\d+)\s*(hour|hr)/);
+    const hours = match ? parseInt(match[1], 10) : 5;
+    activities.push({
+      type: `Left lights on for ${hours} hours`,
+      category: "Energy" as ActivityCategory,
+      carbonKg: parseFloat((hours * EMISSION_FACTORS.light_per_hour).toFixed(2)),
+      tip: "💡 Switching to LED bulbs uses 75% less energy than incandescent lighting.",
+    });
+  }
+
+  // ── Shopping Detection ─────────────────────────────────────────────
+  if (/\b(bought|purchased|ordered|shop)\b/.test(lowerText) && /\b(cloth|shirt|pants|jacket|dress|shoes)\b/.test(lowerText)) {
+    activities.push({
+      type: "Purchased new clothing",
+      category: "Shopping" as ActivityCategory,
+      carbonKg: EMISSION_FACTORS.shopping_clothing,
+      tip: "👕 Fast fashion is a major polluter. Consider second-hand, thrift stores, or sustainable brands.",
+    });
+  }
+
+  if (/\b(bought|purchased|ordered|shop)\b/.test(lowerText) && /\b(phone|laptop|computer|tablet|gadget|electronic)\b/.test(lowerText)) {
+    activities.push({
+      type: "Purchased new electronics",
+      category: "Shopping" as ActivityCategory,
+      carbonKg: EMISSION_FACTORS.shopping_electronics,
+      tip: "📱 Electronics manufacturing is carbon-intensive. Consider refurbished devices or extending device lifespan.",
+    });
+  }
+
+  // ── Waste Detection ────────────────────────────────────────────────
+  if (/\b(trash|garbage|threw\s*away|waste|landfill|dump)\b/.test(lowerText)) {
+    activities.push({
+      type: "Generated household waste",
+      category: "Waste" as ActivityCategory,
+      carbonKg: EMISSION_FACTORS.waste_trash_bag,
+      tip: "🗑️ Composting organic waste can divert up to 30% of household trash from landfills.",
+    });
+  }
+
+  // ── Smart Fallback ─────────────────────────────────────────────────
   if (activities.length === 0) {
     activities.push({
-      type: "Unclassified Daily Activity",
+      type: "Unrecognized Activity",
       category: "Energy" as ActivityCategory,
       carbonKg: 1.0,
-      tip: "Assistant Tip: I couldn't precisely detect specific transit, diet, or energy keywords. Providing exact details (e.g., 'drove 5 miles') helps me analyze your footprint accurately!",
+      tip: "🤖 I couldn't identify specific activities. Try describing what you did with keywords like 'drove', 'ate', 'AC', 'bought', or 'trash' for accurate analysis!",
     });
   }
 
