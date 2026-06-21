@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { ActivityCategory } from "../../types";
 
@@ -13,7 +14,7 @@ const COLORS = {
   Energy: "#eab308",  // yellow
 };
 
-export default function EmissionsChart({ data }: EmissionsChartProps) {
+const EmissionsChart = React.memo(function EmissionsChart({ data }: EmissionsChartProps): JSX.Element {
   const chartData = Object.entries(data)
     .filter(([, value]) => value > 0)
     .map(([name, value]) => ({ name, value }));
@@ -54,4 +55,6 @@ export default function EmissionsChart({ data }: EmissionsChartProps) {
       </ResponsiveContainer>
     </div>
   );
-}
+});
+
+export default EmissionsChart;

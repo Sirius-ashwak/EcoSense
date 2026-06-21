@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import ActivityInput from "../components/ui/ActivityInput";
-import EmissionsDashboard from "../components/ui/EmissionsDashboard";
 import ActionableInsights from "../components/ui/ActionableInsights";
+
+const EmissionsDashboard = dynamic(() => import("../components/ui/EmissionsDashboard"), { ssr: false });
 import { Activity, ParsedEmissionsResponse } from "../types";
 import { calculateTotalEmissions, calculateBreakdown } from "../lib/emissionsCalculator";
 import { Leaf } from "lucide-react";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   const [activities, setActivities] = useState<Activity[]>([]);
 
   const handleParseText = async (text: string) => {
@@ -45,7 +47,7 @@ export default function Home() {
         </div>
       </header>
       
-      <main className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <main className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start" aria-live="polite">
         <div className="lg:col-span-2 flex flex-col gap-8">
           <ActivityInput onSubmit={handleParseText} />
           <ActionableInsights activities={activities} />

@@ -1,9 +1,10 @@
 "use client";
 
+import React from "react";
 import { Leaf, Zap, Car } from "lucide-react";
 import { Activity } from "../../types";
 
-export default function ActionableInsights({ activities }: { activities: Activity[] }) {
+const ActionableInsights = React.memo(function ActionableInsights({ activities }: { activities: Activity[] }): JSX.Element | null {
   if (activities.length === 0) return null;
 
   const getIcon = (category: string) => {
@@ -36,4 +37,6 @@ export default function ActionableInsights({ activities }: { activities: Activit
       </ul>
     </section>
   );
-}
+});
+
+export default ActionableInsights;

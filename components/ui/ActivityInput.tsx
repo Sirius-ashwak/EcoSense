@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 
 interface ActivityInputProps {
   onSubmit: (text: string) => Promise<void>;
 }
 
-export default function ActivityInput({ onSubmit }: ActivityInputProps) {
+const ActivityInput = React.memo(function ActivityInput({ onSubmit }: ActivityInputProps): JSX.Element {
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +42,7 @@ export default function ActivityInput({ onSubmit }: ActivityInputProps) {
           className="w-full p-4 rounded-xl bg-black/20 text-white placeholder:text-gray-400 border border-white/10 focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none resize-none min-h-[120px] transition-all"
           aria-label="Describe your daily activities"
         />
-        {error && <p className="text-red-400 text-sm font-medium">{error}</p>}
+        {error && <p className="text-red-400 text-sm font-medium" role="alert">{error}</p>}
         <button
           type="submit"
           disabled={isLoading || !text}
@@ -55,4 +55,6 @@ export default function ActivityInput({ onSubmit }: ActivityInputProps) {
       </form>
     </section>
   );
-}
+});
+
+export default ActivityInput;

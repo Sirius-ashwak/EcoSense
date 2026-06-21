@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import EmissionsChart from "./EmissionsChart";
 import { ActivityCategory } from "../../types";
 
@@ -8,7 +9,7 @@ interface EmissionsDashboardProps {
   breakdown: Record<ActivityCategory, number>;
 }
 
-export default function EmissionsDashboard({ total, breakdown }: EmissionsDashboardProps) {
+const EmissionsDashboard = React.memo(function EmissionsDashboard({ total, breakdown }: EmissionsDashboardProps): JSX.Element {
   return (
     <section className="bg-white/10 p-6 rounded-2xl backdrop-blur-md shadow-xl border border-white/20 flex flex-col items-center h-full">
       <h2 className="text-xl font-semibold text-white w-full mb-4">Emissions Overview</h2>
@@ -20,9 +21,11 @@ export default function EmissionsDashboard({ total, breakdown }: EmissionsDashbo
         </div>
       </div>
       
-      <div className="w-full bg-black/20 rounded-xl p-4">
+      <div className="w-full bg-black/20 rounded-xl p-4" aria-live="polite">
         <EmissionsChart data={breakdown} />
       </div>
     </section>
   );
-}
+});
+
+export default EmissionsDashboard;
