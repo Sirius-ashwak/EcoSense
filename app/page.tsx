@@ -41,7 +41,7 @@ export default function Home() {
           <div className="bg-green-500 p-2 rounded-xl shadow-lg shadow-green-500/20">
             <Leaf className="w-6 h-6 text-black" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">EcoContext</h1>
+          <h1 className="text-2xl font-bold tracking-tight">EcoSense</h1>
         </div>
       </header>
       

@@ -1,6 +1,6 @@
-# EcoContext
+# EcoSense
 
-EcoContext is an intelligent, NLP-driven carbon footprint awareness platform. Users can log their daily activities in natural language, and the platform will automatically parse, categorize, and calculate the estimated carbon emissions.
+EcoSense is an intelligent, NLP-driven carbon footprint awareness platform. Users can log their daily activities in natural language, and the platform will automatically parse, categorize, and calculate the estimated carbon emissions.
 
 ## Project Overview
 **Vertical**: Carbon Footprint & Sustainability Awareness
