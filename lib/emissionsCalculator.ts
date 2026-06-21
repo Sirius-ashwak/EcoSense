@@ -71,3 +71,26 @@ export function getTreeEquivalency(totalKg: number): string {
   const trees = totalKg / KG_CO2_PER_TREE_PER_YEAR;
   return `≈ ${trees.toFixed(2)} tree-years needed to offset this footprint.`;
 }
+
+/**
+ * Global daily average CO2 emissions per person (in kg).
+ * Source: Global Carbon Project — ~4.7 tonnes/year ÷ 365 days.
+ */
+export const DAILY_AVERAGE_KG = 12.88;
+
+/** Emission severity levels for contextual feedback. */
+export type SeverityLevel = "low" | "moderate" | "high";
+
+/**
+ * Classifies total emissions into a severity level for visual feedback.
+ * Thresholds are based on fraction of the global daily average.
+ *
+ * @param totalKg - Total emissions in kilograms of CO2.
+ * @returns The severity classification: "low", "moderate", or "high".
+ */
+export function getSeverityLevel(totalKg: number): SeverityLevel {
+  if (totalKg <= DAILY_AVERAGE_KG * 0.25) return "low";
+  if (totalKg <= DAILY_AVERAGE_KG * 0.75) return "moderate";
+  return "high";
+}
+
