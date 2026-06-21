@@ -45,7 +45,8 @@ export default function EmissionsChart({ data }: EmissionsChartProps) {
             ))}
           </Pie>
           <Tooltip 
-            formatter={(value: number | string | undefined) => [`${Number(value || 0).toFixed(1)} kg`, "Emissions"]}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any) => [`${Number(value || 0).toFixed(1)} kg`, "Emissions"]}
             contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', color: '#fff' }}
           />
           <Legend wrapperStyle={{ paddingTop: '20px' }} />
