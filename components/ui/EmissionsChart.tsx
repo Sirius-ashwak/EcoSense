@@ -56,8 +56,16 @@ const EmissionsChart = React.memo(function EmissionsChart({ data }: EmissionsCha
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number | string) => [`${Number(value).toFixed(1)} kg CO₂`, "Emissions"]}
-            contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', color: '#fff' }}
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const entry = payload[0];
+              return (
+                <div className="bg-gray-800 px-3 py-2 rounded-lg text-sm shadow-lg">
+                  <p className="text-white font-medium">{entry?.name}</p>
+                  <p className="text-green-300">{Number(entry?.value ?? 0).toFixed(1)} kg CO₂</p>
+                </div>
+              );
+            }}
           />
           <Legend wrapperStyle={{ paddingTop: '20px' }} />
         </PieChart>
