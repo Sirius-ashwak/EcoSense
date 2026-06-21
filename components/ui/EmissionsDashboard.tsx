@@ -9,7 +9,7 @@ interface EmissionsDashboardProps {
   breakdown: Record<ActivityCategory, number>;
 }
 
-const EmissionsDashboard = React.memo(function EmissionsDashboard({ total, breakdown }: EmissionsDashboardProps): JSX.Element {
+const EmissionsDashboard = React.memo(function EmissionsDashboard({ total, breakdown }: EmissionsDashboardProps): React.JSX.Element {
   return (
     <section className="bg-white/10 p-6 rounded-2xl backdrop-blur-md shadow-xl border border-white/20 flex flex-col items-center h-full">
       <h2 className="text-xl font-semibold text-white w-full mb-4">Emissions Overview</h2>

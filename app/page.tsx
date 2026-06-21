@@ -10,7 +10,7 @@ import { Activity, ParsedEmissionsResponse } from "../types";
 import { calculateTotalEmissions, calculateBreakdown } from "../lib/emissionsCalculator";
 import { Leaf } from "lucide-react";
 
-export default function Home(): JSX.Element {
+export default function Home(): React.JSX.Element {
   const [activities, setActivities] = useState<Activity[]>([]);
 
   const handleParseText = async (text: string) => {

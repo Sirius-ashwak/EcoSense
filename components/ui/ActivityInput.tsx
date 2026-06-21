@@ -7,7 +7,7 @@ interface ActivityInputProps {
   onSubmit: (text: string) => Promise<void>;
 }
 
-const ActivityInput = React.memo(function ActivityInput({ onSubmit }: ActivityInputProps): JSX.Element {
+const ActivityInput = React.memo(function ActivityInput({ onSubmit }: ActivityInputProps): React.JSX.Element {
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

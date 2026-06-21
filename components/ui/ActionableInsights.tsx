@@ -4,7 +4,7 @@ import React from "react";
 import { Leaf, Zap, Car } from "lucide-react";
 import { Activity } from "../../types";
 
-const ActionableInsights = React.memo(function ActionableInsights({ activities }: { activities: Activity[] }): JSX.Element | null {
+const ActionableInsights = React.memo(function ActionableInsights({ activities }: { activities: Activity[] }): React.JSX.Element | null {
   if (activities.length === 0) return null;
 
   const getIcon = (category: string) => {

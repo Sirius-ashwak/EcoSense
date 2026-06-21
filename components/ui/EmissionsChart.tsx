@@ -14,7 +14,7 @@ const COLORS = {
   Energy: "#eab308",  // yellow
 };
 
-const EmissionsChart = React.memo(function EmissionsChart({ data }: EmissionsChartProps): JSX.Element {
+const EmissionsChart = React.memo(function EmissionsChart({ data }: EmissionsChartProps): React.JSX.Element {
   const chartData = Object.entries(data)
     .filter(([, value]) => value > 0)
     .map(([name, value]) => ({ name, value }));
